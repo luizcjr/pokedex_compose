@@ -40,7 +40,7 @@ class PokemonListViewModel @Inject constructor(
                 is Resource.Success -> {
                     result.data?.let { pokemonResponse ->
                         endReached.value = curPage * PAGE_SIZE >= pokemonResponse.count
-                        val pokedexEntries = pokemonResponse.results.mapIndexed { index, entry ->
+                        val pokedexEntries = pokemonResponse.results.map { entry ->
                             val number = if (entry.url.endsWith("/")) {
                                 entry.url.dropLast(1).takeLastWhile { it.isDigit() }
                             } else {
