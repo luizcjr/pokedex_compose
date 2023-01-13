@@ -20,7 +20,7 @@ fun SetupNavHost(navController: NavHostController) {
             PokemonListScreen(navController)
         }
 
-        composable(route = Screen.PokemonDetailsScreen.route+"/{dominantColor}/{pokemonName}",
+        composable(route = Screen.PokemonDetailsScreen.route + "/{dominantColor}/{pokemonName}",
             arguments = listOf(
                 navArgument("dominantColor") {
                     type = NavType.IntType

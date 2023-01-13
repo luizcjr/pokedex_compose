@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -29,17 +30,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import coil.request.ImageRequest
 import com.example.pokedexcompose.R
 import com.example.pokedexcompose.data.model.PokedexListEntry
 import com.example.pokedexcompose.ui.navigation.Screen
 import com.example.pokedexcompose.ui.theme.RobotoCondensed
-import com.google.accompanist.coil.CoilImage
 
 @Composable
 fun PokemonListScreen(
-    navController: NavController
+    navController: NavHostController
 ) {
     Surface(
         color = MaterialTheme.colors.background,
@@ -62,6 +64,8 @@ fun PokemonListScreen(
             ) {
 
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            PokemonList(navController = navController)
         }
     }
 }
@@ -110,9 +114,29 @@ fun SearchBar(
 }
 
 @Composable
+fun PokemonList(
+    navController: NavHostController,
+    viewModel: PokemonListViewModel = hiltViewModel()
+) {
+    val pokemonList by remember { viewModel.pokemonList }
+    val endReached by remember { viewModel.endReached }
+    val loadError by remember { viewModel.loadError }
+    val isLoading by remember { viewModel.isLoading }
+
+    LazyColumn(contentPadding = PaddingValues(all = 16.dp)) {
+        val itemCount =
+            if (pokemonList.size % 2 == 0) pokemonList.size / 2 else pokemonList.size / 2 + 1
+        items(itemCount) {
+            if (it >= itemCount - 1 && !endReached) viewModel.loadingPokemonPaginated()
+            PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
+        }
+    }
+}
+
+@Composable
 fun PokedexListEntry(
     entry: PokedexListEntry,
-    navController: NavController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: PokemonListViewModel = hiltViewModel()
 ) {
@@ -140,25 +164,27 @@ fun PokedexListEntry(
             }
     ) {
         Column {
-            CoilImage(
-                request = ImageRequest.Builder(LocalContext.current)
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
                     .data(entry.imageUrl)
-                    .target {
-                        viewModel.calcDominantColor(it) { color ->
-                            dominantColor = color
-                        }
-                    }.build(),
+                    .crossfade(true)
+                    .build(),
                 contentDescription = entry.pokemonName,
-                fadeIn = true,
+                loading = {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.primary, modifier = Modifier.scale(0.5F)
+                    )
+                },
+                success = { success ->
+                    viewModel.calcDominantColor(success.result.drawable) {
+                        dominantColor = it
+                    }
+                    SubcomposeAsyncImageContent()
+                },
                 modifier = Modifier
                     .size(120.dp)
                     .align(CenterHorizontally)
-            ) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.primary,
-                    modifier = Modifier.scale(0.5f)
-                )
-            }
+            )
             Text(
                 text = entry.pokemonName,
                 fontFamily = RobotoCondensed,
@@ -174,7 +200,7 @@ fun PokedexListEntry(
 fun PokedexRow(
     rowIndex: Int,
     entries: List<PokedexListEntry>,
-    navController: NavController
+    navController: NavHostController
 ) {
     Column {
         Row {

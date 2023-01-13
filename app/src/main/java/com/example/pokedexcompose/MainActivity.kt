@@ -10,6 +10,7 @@ import com.example.pokedexcompose.ui.navigation.SetupNavHost
 import com.example.pokedexcompose.ui.theme.PokedexComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -4,10 +4,8 @@ import com.example.pokedexcompose.data.remote.PokemonService
 import com.example.pokedexcompose.data.remote.responses.PokemonListResponse
 import com.example.pokedexcompose.data.remote.responses.PokemonResponse
 import com.example.pokedexcompose.util.Resource
-import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
-@ActivityScoped
 class PokemonRepositoryImpl @Inject constructor(
     private val service: PokemonService
 ) : PokemonRepository {
