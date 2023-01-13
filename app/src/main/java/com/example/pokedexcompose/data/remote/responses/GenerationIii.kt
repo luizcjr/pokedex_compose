@@ -1,7 +1,11 @@
 package com.example.pokedexcompose.data.remote.responses
 
+import com.google.gson.annotations.SerializedName
+
 data class GenerationIii(
     val emerald: Emerald,
-    val firered_leafgreen: FireredLeafgreen,
-    val ruby_sapphire: RubySapphire
+    @SerializedName("firered-leafgreen")
+    val fireredLeafgreen: FireredLeafgreen,
+    @SerializedName("ruby-sapphire")
+    val rubySapphire: RubySapphire
 )

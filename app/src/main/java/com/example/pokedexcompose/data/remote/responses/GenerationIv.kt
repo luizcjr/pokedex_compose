@@ -1,7 +1,11 @@
 package com.example.pokedexcompose.data.remote.responses
 
+import com.google.gson.annotations.SerializedName
+
 data class GenerationIv(
-    val diamond_pearl: DiamondPearl,
-    val heartgold_soulsilver: HeartgoldSoulsilver,
+    @SerializedName("diamond-pearl")
+    val diamondPearl: DiamondPearl,
+    @SerializedName("heartgold-soulsilver")
+    val heartgoldSoulsilver: HeartgoldSoulsilver,
     val platinum: Platinum
 )
