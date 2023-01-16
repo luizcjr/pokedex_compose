@@ -3,12 +3,15 @@ package com.example.pokedexcompose.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.toLowerCase
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.pokedexcompose.ui.screen.PokemonListScreen
+import com.example.pokedexcompose.ui.screen.pokemondetails.PokemonDetailScreen
+import com.example.pokedexcompose.ui.screen.pokemonlist.PokemonListScreen
+import java.util.*
 
 @Composable
 fun SetupNavHost(navController: NavHostController) {
@@ -38,6 +41,12 @@ fun SetupNavHost(navController: NavHostController) {
             val pokemonName = remember {
                 it.arguments?.getString("pokemonName")
             }
+
+            PokemonDetailScreen(
+                dominantColor = dominantColor,
+                pokemonName = pokemonName?.toLowerCase(Locale.ROOT) ?: "",
+                navController = navController
+            )
         }
     }
 }
