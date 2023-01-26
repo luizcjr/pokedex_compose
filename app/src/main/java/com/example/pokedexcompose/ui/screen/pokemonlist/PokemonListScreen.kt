@@ -126,7 +126,11 @@ fun PokemonList(
         val itemCount =
             if (pokemonList.size % 2 == 0) pokemonList.size / 2 else pokemonList.size / 2 + 1
         items(itemCount) {
-            if (it >= itemCount - 1 && !endReached && !isLoading && !isSearching) viewModel.loadingPokemonPaginated()
+            if (it >= itemCount - 1 && !endReached && !isLoading && !isSearching) {
+                LaunchedEffect(key1 = true) {
+                    viewModel.loadingPokemonPaginated()
+                }
+            }
             PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
         }
     }
